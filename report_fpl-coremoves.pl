@@ -1,12 +1,16 @@
-#!/usr/bin/perl -w
+#!/usr/local/bin/perl -w
 #
-# report_fpl-coremoves.pl  PERL script to report core moves from SD2 FPL (forward progress log).
+# report_fpl-coremoves-v3.pl  PERL script to report core moves from SD2 FPL (forward progress log).
 #
-#       by James D. Reed (james.reed@hp.com)
-#       June 10, 2013
+#       by James D. Reed (james.reed@hpe.com)
+#       February 18, 2016
 #
 # Synopsis:
-#	report_fpl_coremoves.pl [--verbose] [--fillgaps] -flp <FLP_File1>[,FLP_File2]...
+#	report_fpl_coremoves-v3.pl [--verbose] [--fillgaps] -flp <FLP_File1>[,FLP_File2]...
+#       
+#       November 20, 2016   - v5:  Cleanup of unitialized references and made sure 15 vPARs are accounted for in all reports and 
+#                                  CSV files.:wq
+#
 #
 #
 use strict;
@@ -23,13 +27,14 @@ use Getopt::Long;
 my $epochTime;
 my $dateString;
 my $timeString;
-my @vparState = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+my @vparState = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
 #
 # Process Command Line Arguments
 #
 our $verbose = '';
 our $fillgaps = '';
+our $Version  = 'v5';
 my @fplfiles = '';
 my $help_opt = '';
 
@@ -65,9 +70,9 @@ foreach (@fplfiles) {
 	my $numActivate = 0;
 	my $numDeactivate = 0;
 	my $parString;
-	my @delta     = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-	my @coreAct   = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-	my @coreDeAct = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	my @delta     = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	my @coreAct   = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	my @coreDeAct = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 	my @repHead   = ("  ", "  ", "  ");
 	my %coresByDay;
 	my $fDateCaptured = 0;
@@ -76,7 +81,6 @@ foreach (@fplfiles) {
 	# We scan the FPL (Forward Progress Log) for key log entries and extract
 	# details we need to characterize core movement in the complex.
 	#
-	if ( $verbose ) { print "Scanning FPL file $_\n"; }
 	while (defined ($line = <FILE>)) {
 		$records++;
 		if ( $verbose && (($records % 100000) == 0)) { print "#"; $| = 1; }
@@ -108,7 +112,7 @@ foreach (@fplfiles) {
 		# Check to see if this vparName has been seen yet!
 		if ( ! value_in($flds[3],@vparNames)) {
 			if ($#vparNames == -1 ) {
-			   foreach my $i (0..10) {
+			   foreach my $i (0..14) {
 				 $vparNames[$i] = " ";
 				}
 			}
@@ -135,7 +139,7 @@ foreach (@fplfiles) {
 		# Check to see if this vparName has been seen yet!
 		if ( ! value_in($flds[3],@vparNames)) {
 		if ($#vparNames == -1 ) {
-			   foreach my $i (0..10) {
+			   foreach my $i (0..14) {
 				 $vparNames[$i] = " ";
 				}
 			}
@@ -157,7 +161,7 @@ foreach (@fplfiles) {
 			#	$i = 0;
 			#}
 			$days[$#days+1] = $dateString;
-			foreach  my $i (0..10) {
+			foreach  my $i (0..14) {
 			   $coresByDay{$dateString}[$i] = 0;
 			}
 		}
@@ -169,11 +173,11 @@ foreach (@fplfiles) {
 		for ( my $i = 0; $i <= $#vparState; $i++) {
 		 $vparState[$i] += $delta[$i];
 		}
-		@delta = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+		@delta = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
-		my $out_line = combine($epochTime, $dateString, $timeString, @vparState); 
+		#my $out_line = combine($epochTime, $dateString, $timeString, @vparState); 
 		
-		print $fh $out_line,"\n";
+		#print $fh $out_line,"\n";
 
 	  }
 	}
@@ -189,9 +193,10 @@ foreach (@fplfiles) {
 	foreach (@coreDeAct) {
 		 $sumDeAct += $_;
 	}
-	if ( $verbose ) { print "Generate core movement report ...\n"; }
+	
 	print "+-------------------------------------------------------------------------+\n";
 	print "Starting script:\t $0\n";
+	print "Script Version: \t $Version\n";
 	print "$repHead[0]\n";
 	print "$repHead[1]\n";
 	print "$repHead[2]\n\n";
@@ -213,11 +218,8 @@ foreach (@fplfiles) {
 
 	# Report Header
 	print "\n\n\t\t\tCores Activated by Day/vPAR\n\n";
-	printf("%12s %5s %5s %5s %5s %5s %5s %5s %5s %5s %5s %5s %10s\n", 
+	printf("%12s,%5s,%5s,%5s,%5s,%5s,%5s,%5s,%5s,%5s,%5s,%5s,%5s,%5s,%5s,%5s,%10s\n", 
 			 "Date/vPar->", @vparNames,"Day Total");
-	printf("%12s %5s %5s %5s %5s %5s %5s %5s %5s %5s %5s %5s %10s\n", 
-			 "-----------", 
-	   "-----","-----","-----","-----","-----","-----","-----","-----","-----","-----","-----","----------");
 	my $checkSum =0;
 	
 	my $i;
@@ -226,24 +228,31 @@ foreach (@fplfiles) {
 	  
 	   my @nums;
 	   my $daySum = 0;
-	   foreach my $vnum (0..10) {
+	   foreach my $vnum (0..14) {
 		  $checkSum += $coresByDay{$days[$i]}[$vnum];
 		  push(@nums,$coresByDay{$days[$i]}[$vnum]);
 		  $daySum += $coresByDay{$days[$i]}[$vnum]
 	   }
-	   printf("%12s %5d %5d %5d %5d %5d %5d %5d %5d %5d %5d %5d %10d\n",$days[$i],@nums,$daySum);
+	   printf("%12s,%5d, %5d,%5d,%5d,%5d,%5d,%5d,%5d,%5d,%5d,%5d,%5d,%5d,%5d,%5d,%10d\n",$days[$i],@nums,$daySum);
+	   #
+	   # Print the number of core moves per partition on a daily basis.
+	   my $out_line = combine($days[$i],@nums, $daySum); 
+	   print $fh $out_line,"\n";
 		if ( $i < $#days ) {
 		  my ($m1, $d1, $y1) = split("/", $days[$i]);
 		  my ($m2, $d2, $y2) = split("/", $days[$i+1]);
 		  my $datediff = Date_to_Days($y2, $m2, $d2) - Date_to_Days($y1, $m1, $d1);
 		  if ( $datediff > 1 ) {
 			if ( $fillgaps ) {
-				my @zeros = (0,0,0,0,0,0,0,0,0,0,0,0);
+				my @zeros = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 				my $edate = "";
 				for my $dnum (1 ..($datediff-1)) {
 				  my ($year, $month, $day) = Add_Delta_Days($y1, $m1, $d1, $dnum);
 				  $edate = sprintf '%02d/%02d/%04d', $month, $day, $year;
-				  printf("%12s %5d %5d %5d %5d %5d %5d %5d %5d %5d %5d %5d %10d\n",$edate,@zeros);
+				  printf("%12s %5d %5d %5d %5d %5d %5d %5d %5d %5d %5d %5d %5d %5d %5d %5d %10d\n",$edate,@zeros);
+				  # Print this information on the CSV file, as well.
+				  my $out_line = combine($edate,@zeros); 
+				  print $fh $out_line,"\n";
 				}
 			} else {
 					my $edate = "   ...";
@@ -289,12 +298,12 @@ sub epochtime {
 
 sub write_headers {
   my ($title, $fh) = @_;
-  my @Headers = ( "Epoch", "Date", "Time",
-                  "vPAR01", "vPAR02", "vPAR03", "vPAR04", "vPAR05", "vPAR06", 
-                  "vPAR07", "vPAR08", "vPAR09", "vPAR10", "vPAR11");
+  my @Headers = ( "Date",
+                  "v1", "v2", "v3", "v4", "v5", "v6", 
+				  "v7", "v8", "v9", "v10", "v11", "v12", "v13", "v14", "v15", "Day.Sum"); 
 
   my $headerLine = combine(@Headers);
-  print $fh $title, "\n";
+  #print $fh $title, "\n";
   print $fh $headerLine,"\n";
 
 }
