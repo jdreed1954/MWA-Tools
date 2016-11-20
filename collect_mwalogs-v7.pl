@@ -16,8 +16,10 @@
 #  December 3, 2009 -       added logic for HP-UX 11i v1 to collect_sysdata.
 #  September 24, 2012 - V2: enhanced text data collection.  
 #  September 30, 2013 - v5: Added argument for log file and non-default placement for tarball.
+#  April 3, 2016      - v6:  added vparstatus and hpvmstatus for VPARS Version 6
 #  November 12, 2016  - v7: datafiles no longer useful, export (extract) global data we need on
 #                           line with the system.  Commited in Dish on November 15, 2016.
+#                           `
 #
 
 use strict;
@@ -291,6 +293,11 @@ sub collect_sysdata {
    logit($logfh, "BDF", "/usr/bin/bdf");
    logit($logfh, "IPCS", "/usr/bin/ipcs -ma");
    logit($logfh, "IOSCAN", "/usr/sbin/ioscan -fn");
+   #
+   # Added to query systems for Oracle database residence (14-May-2014)
+   logit($logfh, "ORACLE DB", "/usr/bin/ps -ef | grep _pmon");
+   logit($logfh, "VCS Cluster", "/opt/VRTSvcs/bin/hagrp -display 2>/dev/null | grep -i systemlist");
+   #
 
    my $dirname = " ";
    if ( "$uxver" eq "B.11.31" ) {

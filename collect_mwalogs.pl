@@ -19,7 +19,8 @@
 #  April 3, 2016      - v6:  added vparstatus and hpvmstatus for VPARS Version 6
 #  November 12, 2016  - v7: datafiles no longer useful, export (extract) global data we need on
 #                           line with the system.  Commited in Dish on November 15, 2016.
-#                           `
+#  November 19, 2016  v7.1: Added display of internal version number of this scripti on log file`
+#
 #
 
 use strict;
@@ -28,6 +29,7 @@ use Time::localtime;
 use Pod::Usage;
 use Getopt::Long;
 
+our $Version         ="v7.1";
 
 #
 # Process Command Line Arguments
@@ -63,8 +65,8 @@ $month = $month + 1;
 
 my $today  = $year . "-" . $month . "-" . $day;
 
-my $TARFILE = $host . "_" . $today . "_mwalogs.tar.gz";
-my $CSVFILE = $host . "_" . $today . "_global.csv";
+our $TARFILE = $host . "_" . $today . "_mwalogs.tar.gz";
+our $CSVFILE = $host . "_" . $today . "_global.csv";
 my $TMPDIR = $host . "_" . $today;
 my $LOGFILE = $dest . "/" . $host . "_" . $today . "_mwalogs.log";
 if ($log) {
@@ -72,6 +74,7 @@ if ($log) {
 }
 
 print "-------------------------------------------------------------------------------\n";
+printf ("Collect Version:\t %s \n", $Version);
 printf ("Starting script:\t %s \n", $0);
 printf ("Hostname:       \t %s \n", $host);
 printf ("Global Extract: \t %s \n",$CSVFILE);
@@ -241,6 +244,13 @@ sub collect_sysdata {
    chop($uxver);
 
    open(my $logfh, "> $log") or die "Cannot open $log \n";
+   print $logfh "-------------------------------------------------------------------------------\n";
+   print $logfh "Collect Version:\t $Version\n";
+   print $logfh "Starting script:\t $0\n";
+   print $logfh "Hostname:       \t $host\n";
+   print $logfh "Global Extract: \t $CSVFILE\n";
+   print $logfh "Tarball:        \t $TARFILE\n";
+   print $logfh "-------------------------------------------------------------------------------\n\n";
 
 #
 #   Quick System Overview
