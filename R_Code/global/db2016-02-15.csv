@@ -1,0 +1,63 @@
+vpar,  dbname,model
+csc01v1, PWFM      ,SD2-16s
+csc01v10  ,         ,SD2-16s
+csc01v10,         ,SD2-16s
+csc01v11,         ,SD2-16s
+csc01v2,         ,SD2-16s
+csc01v3,         ,SD2-16s
+csc01v4,         ,SD2-16s
+csc01v5,         ,SD2-16s
+csc01v6, PIVR1 | PASYS01,SD2-16s
+csc01v7,         ,SD2-16s
+csc01v8,         ,SD2-16s
+csc01v9,         ,SD2-16s
+csc02v1, PIFM | PIFM12,SD2-16s
+csc02v10, PBHYP     ,SD2-16s
+csc02v11, POEM | PRCAT,SD2-16s
+csc02v2, PAGL      ,SD2-16s
+csc02v3, POAR      ,SD2-16s
+csc02v4, PMER      ,SD2-16s
+csc02v5, PALI      ,SD2-16s
+csc02v6, PIVR3 | PASYS02,SD2-16s
+csc02v7, PECM | PAGILE9,SD2-16s
+csc02v8, POVSD     ,SD2-16s
+csc02v9, PEPC      ,SD2-16s
+csc05v1, PSTBH | PPRM,SD2-16s
+csc05v10, SCLFY     ,SD2-16s
+csc05v11, PRHY | PRD2,SD2-16s
+csc05v12, PLAR      ,SD2-16s
+csc05v13, PBCOM     ,SD2-16s
+csc05v2,         ,SD2-16s
+csc05v3, PBDIA     ,SD2-16s
+csc05v4,         ,SD2-16s
+csc05v5, PBEPP     ,SD2-16s
+csc05v6,         ,SD2-16s
+csc05v7, PBSUB     ,SD2-16s
+csc05v8, POM       ,SD2-16s
+csc05v9, PBCCD     ,SD2-16s
+csc06v1,         ,SD2-16s
+csc06v10,         ,SD2-16s
+csc06v11,         ,SD2-16s
+csc06v12,         ,SD2-16s
+csc06v13,         ,SD2-16s
+csc06v2, PBCORP    ,SD2-16s
+csc06v3,         ,SD2-16s
+csc06v4, PBECO     ,SD2-16s
+csc06v5,         ,SD2-16s
+csc06v6, PBMKTG    ,SD2-16s
+csc06v7,         ,SD2-16s
+csc06v8,         ,SD2-16s
+csc06v9,         ,SD2-16s
+csm1v1,         ,SD2-16s
+csm1v10,         ,SD2-16s
+csm1v11,         ,SD2-16s
+csm1v12,         ,SD2-16s
+csm1v13,         ,SD2-16s
+csm1v2,         ,SD2-16s
+csm1v3,         ,SD2-16s
+csm1v4,         ,SD2-16s
+csm1v5,         ,SD2-16s
+csm1v6,         ,SD2-16s
+csm1v7,         ,SD2-16s
+csm1v8,         ,SD2-16s
+csm1v9,,

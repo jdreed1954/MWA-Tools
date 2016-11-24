@@ -1,0 +1,30 @@
+#
+# set_DISH_Globals.r
+#
+##
+## This block should be edited to reflect the data being summarized.
+## Between this line to the comment that begins with "#######"
+CASE      <- "1405"
+DATAROOT  <- "C:/Users/jxreed/Desktop/MyProjects/bin/global/"
+DBFILE    <- paste(DATAROOT,"db2014-02-24.csv",sep="")
+#DBFILE    <- paste(DATAROOT,"databases.csv",sep="")
+SYSFILE   <- paste(DATAROOT,CASE,"_SYS_SUMMARY.csv", sep="")
+
+dbs <- read.csv(DBFILE, header=T, sep=",", fill=T,stringsAsFactors=F)
+sys <- read.csv(SYSFILE, header=T, sep=",", fill=T,stringsAsFactors=F)
+
+# Calculate Date Range
+enddate <- as.Date("04/16/2014", "%m/%d/%Y")
+startdate <- enddate - 30
+
+# These are the complexes we are interested in generating this summary data.
+#Complexes <- c("cs01", "cs02", "csc03", "csc04", "csc05", "csc06", "pdb1n1")  # 1312
+#Complexes <- c(        "cs02", "csc03", "csc04", "csc05", "csc06", "pdb1n1")  # 1401
+#Complexes <- c(                "csc03", "csc04", "csc05", "csc06", "pdb1n1")  # 1402
+#Complexes <- c(                "csc03", "csc04", "csc05", "csc06", "pdb1n1")  # 1403
+# Complexes <- c(                "csc03", "csc04", "csc05", "csc06", "pdb1n1")  # 1404
+# Complexes <- c(                "csc10", "cs10n0", "cs10n1", "cs6n1", "cs7", "cs8", "cs9", "csc03", "csc04", 
+                                 "csc05", ")  # 1405
+ Complexes <- c(                                                     "pdb1n1")  # TEST
+baseDir <- paste("C:/Users/jxreed/Desktop/MyProjects/dish",CASE,sep="")
+##################################################################################################################################
